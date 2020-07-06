@@ -1,4 +1,10 @@
-require('./config.js');
+const Discord = require('discord.js');
+const ytdl = require('ytdl-core');
+const bot = new Discord.Client();
+const servers = {};
+const config = require('./config.json');
+
+bot.login(process.env.token);
 
 function play(connection, message) {
     var server = servers[message.guild.id];
@@ -7,13 +13,13 @@ function play(connection, message) {
     server.queue.shift();
 
     server.dispatcher.on("end", function(){
-       if(server.queue[0]) play(connection, message);
-       else connection.disconnect();
+        if(server.queue[0]) play(connection, message);
+        else connection.disconnect();
     });
 }
 
 bot.on('message', message =>{
-    let role = message.guild.roles.find("name", cargo_principal);
+    let role = message.guild.roles.find("name", config.cargo_principal);
     var data = new Date();
 
     var dia     = data.getDate();           // 1-31
@@ -115,7 +121,7 @@ bot.on('message', message =>{
 
 bot.on('guildMemberAdd', member => {
 
-    const channel = member.guild.channels.find(ch => ch.name === principal);
+    const channel = member.guild.channels.find(ch => ch.name === config.principal);
 
     if (!channel) return;
 
